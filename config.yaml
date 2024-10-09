@@ -1,0 +1,54 @@
+paths:
+  cancer_omop: /data/shubov_thesis/vonko_omop # directory MAPPED
+  cancer_dataset: /data/shubov_thesis/aicare_nsp/tokenized_dataset # directory with Dataset
+  cancer_df_labels: /data/shubov_thesis/labels/vonko_input_labels_v1.parquet.gz # .parquet (gzip)
+  tokenizer: /data/shubov_thesis/tokenizer # directory
+  mimic_df_labels: /data/shubov_thesis/mimic_df_labels.parquet.gz # .parquet (gzip)
+  training_data: "/data/shubov_thesis/bert_inputs/bert_input_v4.parquet.gz" # .parquet (gzip) FROM GOOGLE CLOUD
+  tokenized_training_dataset: "/data/shubov_thesis/mimic_nsp/tokenized_training" # directory
+  tokenized_evaluation_dataset: "/data/shubov_thesis/mimic_nsp/tokenized_evaluation" # directory
+
+delimiters:
+  observation: "\t"
+  observation_period: ";"
+  person: ";"
+  condition_occurrence: ";"
+  drug_exposure: ";"
+  measurement: "\t"
+  procedure_occurrence: "\t"
+  visit_occurrence: ";"
+  death: "\t"
+
+bert:
+  model_max_len: 512
+  mlm_probability: 0.15
+  max_training_steps: 1000000
+  save_steps: 100000
+  logging_steps: 1000
+  eval_steps: 100000
+  eval_accumulation_steps: 1
+  learning_rate: 5e-5
+  train_size: 0.9
+  train_batch_size: 64
+  eval_batch_size: 256
+  gradient_accumulation_steps: 1
+  warmup_ratio: 0.1
+  optimizer: "AdamW"
+  path_to_output_dir: "./nsp_results" # directory
+  path_to_logs: "./nsp_logs" # directory
+
+
+inference:
+  tokeized_data_path: "/data/shubov_thesis/aicare_nsp/tokenized_dataset" # directory
+  model_checkpoint: "/data/shubov_thesis/checkpoints/nsp_1000000" # directory
+  cls_save_path: "/data/shubov_thesis/embeddings/aicare_nsp_cls.pkl" # .pkl
+  mean_seave_path: "/data/shubov_thesis/embeddings/aicare_nsp_mean.pkl" # .pkl
+
+clustering:
+  embeddings_path: "/data/shubov_thesis/embeddings/aicare_nsp_cls.pkl" # .pkl
+  k: 5
+  output_path: "/data/shubov_thesis/clustering.csv" # .csv
+  athena_concept_path: "/data/shubov_thesis/athena_vonko/CONCEPT.csv" # .csv
+  athena_concept_sep: '\t'
+  common_tokens_path: "/data/shubov_thesis/common_tokens.csv" # .csv
+  report_path: "/data/shubov_thesis/clustering_report.csv" # .csv
